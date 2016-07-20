@@ -16,7 +16,8 @@
 
 package com.wdullaer.materialdatetimepicker.date;
 
-import java.util.Calendar;
+
+import com.ibm.icu.util.Calendar;
 
 /**
  * Controller class to communicate among the various components of the date picker dialog.
@@ -39,7 +40,7 @@ public interface DatePickerController {
     
     Calendar[] getHighlightedDays();
 
-    Calendar[] getSelectableDays();
+    com.ibm.icu.util.Calendar[] getSelectableDays();
 
     int getFirstDayOfWeek();
 
@@ -47,7 +48,7 @@ public interface DatePickerController {
 
     int getMaxYear();
 
-    Calendar getStartDate();
+    com.ibm.icu.util.Calendar getStartDate();
 
     Calendar getEndDate();
 

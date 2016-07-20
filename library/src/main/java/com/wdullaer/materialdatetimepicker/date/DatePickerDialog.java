@@ -41,14 +41,17 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.ibm.icu.text.DateFormat;
+import com.ibm.icu.text.DateTimePatternGenerator;
+import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.util.Calendar;
+import com.ibm.icu.util.ULocale;
 import com.wdullaer.materialdatetimepicker.HapticFeedbackController;
 import com.wdullaer.materialdatetimepicker.R;
 import com.wdullaer.materialdatetimepicker.TypefaceHelper;
 import com.wdullaer.materialdatetimepicker.Utils;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Locale;
 
@@ -98,7 +101,7 @@ public class DatePickerDialog extends DialogFragment implements
     private static SimpleDateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy", Locale.getDefault());
     private static SimpleDateFormat DAY_FORMAT = new SimpleDateFormat("dd", Locale.getDefault());
 
-    private final Calendar mCalendar = Calendar.getInstance();
+    private final Calendar mCalendar = Calendar.getInstance(new ULocale("fa_IR"));
     private OnDateSetListener mCallBack;
     private HashSet<OnDateChangedListener> mListeners = new HashSet<>();
     private DialogInterface.OnCancelListener mOnCancelListener;
@@ -459,14 +462,15 @@ public class DatePickerDialog extends DialogFragment implements
         if (mDayOfWeekView != null) {
             if(mTitle != null) mDayOfWeekView.setText(mTitle.toUpperCase(Locale.getDefault()));
             else {
-                mDayOfWeekView.setText(mCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG,
-                        Locale.getDefault()).toUpperCase(Locale.getDefault()));
+                final String pattern = DateTimePatternGenerator.getInstance(Locale.getDefault()).getBestPattern("EEEE");
+                SimpleDateFormat formatter = new SimpleDateFormat(pattern, Locale.getDefault());
+                mDayOfWeekView.setText(formatter.format(mCalendar));
             }
         }
 
-        mSelectedMonthTextView.setText(mCalendar.getDisplayName(Calendar.MONTH, Calendar.SHORT,
-                Locale.getDefault()).toUpperCase(Locale.getDefault()));
-        mSelectedDayTextView.setText(DAY_FORMAT.format(mCalendar.getTime()));
+        final String pattern = DateTimePatternGenerator.getInstance(Locale.getDefault()).getBestPattern("MMMM");
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern, Locale.getDefault());
+        mSelectedMonthTextView.setText(formatter.format(mCalendar));
         mYearView.setText(YEAR_FORMAT.format(mCalendar.getTime()));
 
         // Accessibility.
