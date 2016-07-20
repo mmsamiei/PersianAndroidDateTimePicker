@@ -89,8 +89,8 @@ public class DatePickerDialog extends DialogFragment implements
     private static final String KEY_CANCEL_STRING = "cancel_string";
 
 
-    private static final int DEFAULT_START_YEAR = 1900;
-    private static final int DEFAULT_END_YEAR = 2100;
+    private static final int DEFAULT_START_YEAR = 1300;
+    private static final int DEFAULT_END_YEAR = 1500;
 
     private static final int ANIMATION_DURATION = 300;
     private static final int ANIMATION_DELAY = 500;
