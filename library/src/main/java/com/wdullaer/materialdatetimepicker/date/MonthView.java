@@ -38,14 +38,15 @@ import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+import com.ibm.icu.text.DateTimePatternGenerator;
+import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.util.Calendar;
+import com.ibm.icu.util.ULocale;
 import com.wdullaer.materialdatetimepicker.R;
 import com.wdullaer.materialdatetimepicker.TypefaceHelper;
 import com.wdullaer.materialdatetimepicker.date.MonthAdapter.CalendarDay;
 
 import java.security.InvalidParameterException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Formatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -134,7 +135,6 @@ public abstract class MonthView extends View {
     protected Paint mSelectedCirclePaint;
     protected Paint mMonthDayLabelPaint;
 
-    private final Formatter mFormatter;
     private final StringBuilder mStringBuilder;
 
     // The Julian day of the first day displayed by this item
@@ -197,8 +197,8 @@ public abstract class MonthView extends View {
         mController = controller;
         Resources res = context.getResources();
 
-        mDayLabelCalendar = Calendar.getInstance();
-        mCalendar = Calendar.getInstance();
+        mDayLabelCalendar = Calendar.getInstance(new ULocale("fa_IR"));
+        mCalendar = Calendar.getInstance(new ULocale("fa_IR"));
 
         mDayOfWeekTypeface = res.getString(R.string.mdtp_day_of_week_label_typeface);
         mMonthTitleTypeface = res.getString(R.string.mdtp_sans_serif);
@@ -221,7 +221,6 @@ public abstract class MonthView extends View {
         mMonthTitleColor = ContextCompat.getColor(context, R.color.mdtp_white);
 
         mStringBuilder = new StringBuilder(50);
-        mFormatter = new Formatter(mStringBuilder, Locale.getDefault());
 
         MINI_DAY_NUMBER_TEXT_SIZE = res.getDimensionPixelSize(R.dimen.mdtp_day_number_size);
         MONTH_LABEL_TEXT_SIZE = res.getDimensionPixelSize(R.dimen.mdtp_month_label_size);
@@ -449,15 +448,13 @@ public abstract class MonthView extends View {
 
     @NonNull
     private String getMonthAndYearString() {
-        Locale locale = Locale.getDefault();
+        ULocale locale = new ULocale("fa_IR");
         String pattern = "MMMM yyyy";
 
         if(Build.VERSION.SDK_INT < 18) pattern = getContext().getResources().getString(R.string.mdtp_date_v1_monthyear);
-        else pattern = DateFormat.getBestDateTimePattern(locale, pattern);
+        else pattern = DateTimePatternGenerator.getInstance(locale).getBestPattern(pattern);
 
         SimpleDateFormat formatter = new SimpleDateFormat(pattern, locale);
-        formatter.applyLocalizedPattern(pattern);
-        mStringBuilder.setLength(0);
         return formatter.format(mCalendar.getTime());
     }
 
@@ -621,12 +618,12 @@ public abstract class MonthView extends View {
      * @return The weekday label
      */
     private String getWeekDayLabel(Calendar day) {
-        Locale locale = Locale.getDefault();
+        ULocale locale = new ULocale("fa_IR");
 
         // Localised short version of the string is not available on API < 18
         if(Build.VERSION.SDK_INT < 18) {
-            String dayName = new SimpleDateFormat("E", locale).format(day.getTime());
-            String dayLabel = dayName.toUpperCase(locale).substring(0, 1);
+            String dayName = new SimpleDateFormat("E", new ULocale("fa_IR")).format(day.getTime());
+            String dayLabel = dayName.substring(0, 1);
 
             // Chinese labels should be fetched right to left
             if (locale.equals(Locale.CHINA) || locale.equals(Locale.CHINESE) || locale.equals(Locale.SIMPLIFIED_CHINESE) || locale.equals(Locale.TRADITIONAL_CHINESE)) {
@@ -643,7 +640,7 @@ public abstract class MonthView extends View {
                 else {
                     // I know this is duplication, but it makes the code easier to grok by
                     // having all hebrew code in the same block
-                    dayLabel = dayName.toUpperCase(locale).substring(0, 1);
+                    dayLabel = dayName.substring(0, 1);
                 }
             }
 

@@ -32,11 +32,13 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 
+import com.ibm.icu.text.DateTimePatternGenerator;
+import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.util.Calendar;
+import com.ibm.icu.util.ULocale;
 import com.wdullaer.materialdatetimepicker.Utils;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog.OnDateChangedListener;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Locale;
 
 /**
@@ -62,7 +64,7 @@ public abstract class DayPickerView extends ListView implements OnScrollListener
     protected int mNumWeeks = 6;
     protected boolean mShowWeekNumber = false;
     protected int mDaysPerWeek = 7;
-    private static SimpleDateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy", Locale.getDefault());
+    private static SimpleDateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy", new ULocale("fa_IR"));
 
     // These affect the scroll speed and feel
     protected float mFriction = 1.0f;
@@ -439,13 +441,19 @@ public abstract class DayPickerView extends ListView implements OnScrollListener
    }
 
     private static String getMonthAndYearString(MonthAdapter.CalendarDay day) {
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance(new ULocale("fa_IR"));
         cal.set(day.year, day.month, day.day);
 
+
+        String pattern = DateTimePatternGenerator.getInstance(new ULocale("fa_IR")).getBestPattern("MMMM");
+        com.ibm.icu.text.SimpleDateFormat formatter = new com.ibm.icu.text.SimpleDateFormat(pattern, new ULocale("fa_IR"));
+
         String sbuf = "";
-        sbuf += cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
+        sbuf += formatter.format(cal);
         sbuf += " ";
         sbuf += YEAR_FORMAT.format(cal.getTime());
+
+        Log.d("sbuf", sbuf);
         return sbuf;
     }
 

@@ -29,6 +29,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -98,10 +99,12 @@ public class DatePickerDialog extends DialogFragment implements
     private static final int ANIMATION_DURATION = 300;
     private static final int ANIMATION_DELAY = 500;
 
-    private static SimpleDateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy", Locale.getDefault());
-    private static SimpleDateFormat DAY_FORMAT = new SimpleDateFormat("dd", Locale.getDefault());
+    private static final ULocale locale = new ULocale("fa_IR");
 
-    private final Calendar mCalendar = Calendar.getInstance(new ULocale("fa_IR"));
+    private static SimpleDateFormat YEAR_FORMAT = new SimpleDateFormat("yyyy", locale);
+    private static SimpleDateFormat DAY_FORMAT = new SimpleDateFormat("dd", locale);
+
+    private final Calendar mCalendar = Calendar.getInstance(locale);
     private OnDateSetListener mCallBack;
     private HashSet<OnDateChangedListener> mListeners = new HashSet<>();
     private DialogInterface.OnCancelListener mOnCancelListener;
@@ -204,6 +207,7 @@ public class DatePickerDialog extends DialogFragment implements
         final Activity activity = getActivity();
         activity.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
         mCurrentView = UNINITIALIZED;
         if (savedInstanceState != null) {
             mCalendar.set(Calendar.YEAR, savedInstanceState.getInt(KEY_SELECTED_YEAR));
@@ -413,6 +417,7 @@ public class DatePickerDialog extends DialogFragment implements
     }
 
     private void setCurrentView(final int viewIndex) {
+        Locale.setDefault(new Locale("fa"));
         long millis = mCalendar.getTimeInMillis();
 
         switch (viewIndex) {
@@ -463,21 +468,21 @@ public class DatePickerDialog extends DialogFragment implements
         if (mDayOfWeekView != null) {
             if (mTitle != null) mDayOfWeekView.setText(mTitle.toUpperCase(Locale.getDefault()));
             else {
-                final String pattern = DateTimePatternGenerator.getInstance(Locale.getDefault()).getBestPattern("EEEE");
-                SimpleDateFormat formatter = new SimpleDateFormat(pattern, Locale.getDefault());
+                final String pattern = DateTimePatternGenerator.getInstance(locale).getBestPattern("EEEE");
+                SimpleDateFormat formatter = new SimpleDateFormat(pattern, locale);
                 mDayOfWeekView.setText(formatter.format(mCalendar));
             }
         }
 
 
 
-        String pattern = DateTimePatternGenerator.getInstance(Locale.getDefault()).getBestPattern("MMMM");
-        SimpleDateFormat formatter = new SimpleDateFormat(pattern, Locale.getDefault());
+        String pattern = DateTimePatternGenerator.getInstance(locale).getBestPattern("MMMM");
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern, locale);
         mSelectedMonthTextView.setText(formatter.format(mCalendar));
         mYearView.setText(YEAR_FORMAT.format(mCalendar.getTime()));
 
-        pattern = DateTimePatternGenerator.getInstance(Locale.getDefault()).getBestPattern("d");
-        formatter = new SimpleDateFormat(pattern, Locale.getDefault());
+        pattern = DateTimePatternGenerator.getInstance(locale).getBestPattern("d");
+        formatter = new SimpleDateFormat(pattern, locale);
         mSelectedDayTextView.setText(formatter.format(mCalendar));
 
         // Accessibility.

@@ -18,12 +18,14 @@ package com.wdullaer.materialdatetimepicker.date;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.LayoutParams;
 import android.widget.BaseAdapter;
 
 import com.ibm.icu.util.Calendar;
+import com.ibm.icu.util.ULocale;
 import com.wdullaer.materialdatetimepicker.date.MonthView.OnDayClickListener;
 
 
@@ -85,7 +87,7 @@ public abstract class MonthAdapter extends BaseAdapter implements OnDayClickList
 
         private void setTime(long timeInMillis) {
             if (calendar == null) {
-                calendar = Calendar.getInstance();
+                calendar = Calendar.getInstance(new ULocale("fa_IR"));
             }
             calendar.setTimeInMillis(timeInMillis);
             month = calendar.get(Calendar.MONTH);
@@ -142,8 +144,7 @@ public abstract class MonthAdapter extends BaseAdapter implements OnDayClickList
         Calendar startDate = mController.getStartDate();
         int endMonth = endDate.get(Calendar.YEAR) * MONTHS_IN_YEAR + endDate.get(Calendar.MONTH);
         int startMonth = startDate.get(Calendar.YEAR) * MONTHS_IN_YEAR + startDate.get(Calendar.MONTH);
-        return endMonth - startMonth + 1;
-        //return ((mController.getMaxYear() - mController.getMinYear()) + 1) * MONTHS_IN_YEAR;
+        return ((mController.getMaxYear() - mController.getMinYear()) + 1) * MONTHS_IN_YEAR;
     }
 
     @Override
