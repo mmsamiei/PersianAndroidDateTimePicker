@@ -11,12 +11,11 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.ibm.icu.util.Calendar;
+import com.ibm.icu.util.ULocale;
 import com.wdullaer.materialdatetimepicker.Utils;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
-
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements
     View.OnClickListener,
@@ -48,8 +47,6 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        Locale.setDefault(new Locale("fa"));
         // Find our View instances
         timeTextView = (TextView)findViewById(R.id.time_textview);
         dateTextView = (TextView)findViewById(R.id.date_textview);
@@ -120,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements
         dateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar now = Calendar.getInstance();
+                Calendar now = Calendar.getInstance(new ULocale("fa_IR"));
                 DatePickerDialog dpd = DatePickerDialog.newInstance(
                         MainActivity.this,
                         now.get(Calendar.YEAR),

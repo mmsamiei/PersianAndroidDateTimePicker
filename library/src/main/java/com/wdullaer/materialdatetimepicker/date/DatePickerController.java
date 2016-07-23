@@ -40,7 +40,7 @@ public interface DatePickerController {
     
     Calendar[] getHighlightedDays();
 
-    com.ibm.icu.util.Calendar[] getSelectableDays();
+    Calendar[] getSelectableDays();
 
     int getFirstDayOfWeek();
 
@@ -48,7 +48,7 @@ public interface DatePickerController {
 
     int getMaxYear();
 
-    com.ibm.icu.util.Calendar getStartDate();
+    Calendar getStartDate();
 
     Calendar getEndDate();
 
