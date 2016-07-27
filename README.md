@@ -1,4 +1,4 @@
-# PersianAndroidDateTimePicker
+# Persian Android DateTime Picker
 Persian Material Jalali Datetime picker
 ## Introduction
 This library is designed to help you simply select persian Shamsi Datetime. It is
